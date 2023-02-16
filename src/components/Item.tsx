@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { bindActionCreators } from "redux"
 import styled from "styled-components"
 import useCalculate from "../hooks/useCalculate"
@@ -8,7 +8,6 @@ import { State } from "../redux/reducers"
 import { ChildProperty, ItemStyleProps } from "../types"
 import { AiOutlineClose, AiOutlinePlus } from "react-icons/ai"
 import { BsStarFill } from "react-icons/bs"
-import { useSelector } from "react-redux"
 
 const Container = styled.div<ItemStyleProps>`
     width: 140px;
@@ -139,13 +138,13 @@ const Item: React.FC<ChildProperty> = ({ text, id, selfBV, parents }) => {
         updateSelfValue(id, value)
     }
 
-    const hasChild = children.find((item) => {
+    const hasChild = children.some((item) => {
         return item.parents?.includes(id)
     })
 
     const { addChild, removeChild, updateSelfValue } = bindActionCreators(actionCreators, dispatch)
     return (
-        <Container hasChild={hasChild ? true : false} isParent={(parents?.length && parents?.length > 0) ? true : false}>
+        <Container hasChild={hasChild} isParent={(parents?.length && parents?.length > 0) || false}>
             <div className="wrapper">
                 <div className="desc-item desc-name">
                     <BsStarFill />
